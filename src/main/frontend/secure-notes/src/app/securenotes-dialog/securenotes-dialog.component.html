@@ -1,0 +1,26 @@
+<div class="flex-container">
+    <button mat-raised-button class="get-button-space" (click)="get()">GET</button>
+    <button *ngIf="new" mat-raised-button class="button-space" (click)="post()">POST</button>
+    <button *ngIf="!new && changed" mat-raised-button class="button-space" (click)="put()">PUT</button>
+    <button *ngIf="!new && note" mat-raised-button class="button-space" (click)="delete()">DELETE</button>
+    <div [formGroup]="notesForm" class="alignTop">
+        <mat-form-field class="title-field" appearance="outline">
+            <mat-label [cdkTrapFocusAutoCapture]="new" [cdkTrapFocus]="new">{{clickTitle}}</mat-label>
+            <input type="text" matInput formControlName="title" (value)="prepareNew()" class="form-control" [matAutocomplete]="auto3">
+            <mat-autocomplete #auto3="matAutocomplete" autoActiveFirstOption="true">
+                <mat-option *ngFor="let title of titles" [value]="title">
+                    {{title}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+        <mat-form-field class="note-field" appearance="outline">
+            <mat-label></mat-label>
+            <textarea class="area-size" [class.hidden]="false" type="text" matInput formControlName="note"></textarea>
+        </mat-form-field> 
+        <span class="title-field">
+            <mat-checkbox class="raw-checkbox" (change)="showRaw($event)" color="primary" [checked]="raw" formControlName="raw">
+                raw?
+            </mat-checkbox>            
+        </span>
+    </div>
+</div>  
