@@ -1,5 +1,6 @@
 package de.stullrich.securenotes;
 
+import de.stullrich.securenotes.service.SecureNotesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,13 @@ public class SecureNotesApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		logger.info("Creating table");
 		String title = "note";
-		String note = "kjadsfpgdfOIGIHJaefögoihja";
+		String note = "ENCRYPTED_kjadsfpgdfOIGIHJß98ad9rghugaß9UHüoiuhnBNEWFIUHFiaefögoihja";
 
 		jdbcTemplate.execute("DROP TABLE securenote IF EXISTS");
 		jdbcTemplate.execute("CREATE TABLE securenote(id SERIAL, title VARCHAR(128), note VARCHAR(1024))");
 		for (int i = 1; i < 4; i++) {
-			jdbcTemplate.update("INSERT INTO securenote(title, note) VALUES ('" + (title + i) + "', '" + (i + note) + "')");
+			Long id = SecureNotesService.getId();
+			jdbcTemplate.update("INSERT INTO securenote(id, title, note) VALUES ('" + id + "', '" + (title + i) + "', '" + (note + i) + "')");
 		}
 	}
 }

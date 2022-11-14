@@ -3,10 +3,8 @@ package de.stullrich.securenotes.controller;
 import de.stullrich.securenotes.model.SecureNote;
 import de.stullrich.securenotes.service.SecureNotesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -26,12 +24,32 @@ public class SecureNotesController {
 	}
 
 	@GetMapping("/rest/note")
+	@ResponseStatus(HttpStatus.OK)
 	public List getSecureNotes() {
 		return service.getAll();
 	}
 
 	@GetMapping("/rest/note/{id}")
+	@ResponseStatus(HttpStatus.OK)
 	public SecureNote getSecureNote(@PathVariable() long id) {
 		return service.get(id);
+	}
+
+	@PostMapping("/rest/note")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SecureNote createSecureNote(@RequestBody SecureNote secureNote) {
+		return service.createOrUpdate(null, secureNote);
+	}
+
+	@PutMapping("/rest/note/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public SecureNote updateSecureNote(@PathVariable() long id, @RequestBody SecureNote secureNote) {
+		return service.createOrUpdate(id, secureNote);
+	}
+
+	@DeleteMapping("/rest/note/{id}")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public void deleteSecureNote(@PathVariable() long id) {
+		service.delete(id);
 	}
 }
