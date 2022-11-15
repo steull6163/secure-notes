@@ -41,7 +41,7 @@ public class SecureNotesService {
 			if (id.equals(secureNote.getId())) {
 				createdOrUpdated = repository.save(secureNote);
 			} else {
-				// trrow exception
+				// throw exception
 			}
 		}
 		return createdOrUpdated;

@@ -31,7 +31,7 @@ public class SecureNotesController {
 
 	@GetMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public SecureNote getSecureNote(@PathVariable() long id) {
+	public SecureNote getSecureNote(@PathVariable long id) {
 		return service.get(id);
 	}
 
@@ -43,13 +43,13 @@ public class SecureNotesController {
 
 	@PutMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public SecureNote updateSecureNote(@PathVariable() long id, @RequestBody SecureNote secureNote) {
+	public SecureNote updateSecureNote(@PathVariable long id, @RequestBody SecureNote secureNote) {
 		return service.createOrUpdate(id, secureNote);
 	}
 
 	@DeleteMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void deleteSecureNote(@PathVariable() long id) {
+	public void deleteSecureNote(@PathVariable long id) {
 		service.delete(id);
 	}
 }

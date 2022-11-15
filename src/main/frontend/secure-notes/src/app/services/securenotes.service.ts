@@ -10,7 +10,7 @@ import { SecureNote } from '../app.model';
 export class  SecureNotesService {
   
   private host: any;
-  private apiUrl: string = "/rest/note";
+  private apiUrl: string = "/rest/note"; // "http://localhost:8080/rest/note";
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -50,11 +50,6 @@ export class  SecureNotesService {
     this.http.delete(this.apiUrl + "/" + id, this.httpOptions);
   }
 
-  getClearText(note: string): string {
-    console.log("SecureNotesService#getClearText");
-    return this.decrypt(note);
-  }
-
   encrypt(note: string): string {                       
     console.log("SecureNotesService#encrypt");
     const parts = note.split("_");
@@ -64,7 +59,7 @@ export class  SecureNotesService {
     return "ENCRYPTED_" + note;
   }
 
-  private decrypt(note: string): string {
+  decrypt(note: string): string {
     console.log("SecureNotesService#decrypt");
     const parts = note.split("_");
     return "DECRYPTED_" + parts[1];

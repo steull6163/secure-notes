@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { Router } from '@angular/router';
 import { SecureNote } from '../app.model';
 import { SecureNotesService } from '../services/securenotes.service';
+
+const KLICK: string = "Klick...";
 
 @Component({
   selector: 'app-securenotes-dialog',
@@ -20,9 +23,10 @@ export class SecurenotesDialog implements OnInit {
   displayedNote: string  = "";
   notesForm: FormGroup;
   notes: SecureNote[] = [];
-  clickTitle: string = "Klick...";
+  clickTitle: string = KLICK;
 
   constructor(private fb: FormBuilder,
+    private router: Router,
     private secureNotesService: SecureNotesService) {
     this.notesForm = this.fb.group({
       title: [],
@@ -50,16 +54,16 @@ export class SecurenotesDialog implements OnInit {
       this.notes = notes;
       this.notes.forEach(note => this.titles.push(note.title));
       this.titles.push("NEW");
-    });    
+    }); 
   }
 
   get() {
-    console.log("SecurenotesDialog#get");
     this.notesForm.controls["note"].setValue("");
     const selectedTitle = this.notesForm.controls["title"].value;
+    console.log("SecurenotesDialog#get " + selectedTitle);
     const secureNote = this.notes.find(secureNote => secureNote.title === selectedTitle);
     if (secureNote) {
-      const text = this.secureNotesService.getClearText(secureNote.note);
+      const text = this.secureNotesService.decrypt(secureNote.note);
       this.notesForm.controls["note"].setValue(text, { emitModelToViewChange: true });
       this.changed = false;
       this.note = true;
@@ -67,24 +71,27 @@ export class SecurenotesDialog implements OnInit {
   }
 
   put() {
-    console.log("SecurenotesDialog#put");
+    console.log("SecurenotesDialog#put " + this.notesForm.controls["title"].value);
     // TODO: validate form
     this.secureNotesService.updateSecureNote(this.notesForm.value);
   }
 
   post() {
-    console.log("pSecurenotesDialog#ost");
+    console.log("pSecurenotesDialog#post " + this.notesForm.controls["title"].value);
     // TODO: validate form
     this.secureNotesService.createSecureNote(this.notesForm.value).subscribe(note => {
-      if (note) {
-        this.notes.push(note);
-      }
-      this.ngOnInit();
+      this.notes.push(note);
+      this.clickTitle = KLICK;
+      this.notesForm.controls["title"].setValue("");
+      this.notesForm.controls["note"].setValue("");
+      const NEW = this.titles.pop();
+      this.titles.push(note.title);
+      this.titles.push(NEW!); 
     });
   }
     
   delete() {
-    console.log("SecurenotesDialog#delete");
+    console.log("SecurenotesDialog#delete " + this.notesForm.controls["title"].value);
     const selectedTitle = this.notesForm.controls["title"].value;
     const secureNote = this.notes.find(secureNote => secureNote.title === selectedTitle);
     if (secureNote && secureNote.id) {
@@ -93,19 +100,17 @@ export class SecurenotesDialog implements OnInit {
     this.notes = this.notes.filter(note => note.title !== selectedTitle);
   }
 
-  showRaw(event: MatCheckboxChange) {  
-    console.log("SecurenotesDialog#showRaw"); 
+  toggleView(event: MatCheckboxChange) {  
+    console.log("SecurenotesDialog#toggleView"); 
     const secureNote = this.notesForm.value;    
     if (event.checked) {
       // encrypt
       this.displayedNote = this.secureNotesService.encrypt(secureNote!.note);
       this.notesForm.controls["note"].setValue(this.displayedNote, { emitModelToViewChange: true });     
     } else {
-      this.displayedNote = this.notes.find(note => {
-        note => note.title === this.notesForm.controls["title"].value}
-        ));
-
-      this.notesForm.controls["note"].setValue(this.s, { emitModelToViewChange: true });
+      // decrypt
+      this.displayedNote = this.secureNotesService.decrypt(this.notesForm.controls["note"].value);
+      this.notesForm.controls["note"].setValue(this.displayedNote, { emitModelToViewChange: true });
     }   
     this.raw = event.checked;
     this.changed = false;
@@ -118,5 +123,4 @@ export class SecurenotesDialog implements OnInit {
     this.clickTitle = "";
     this.new = true;
   }
-
 }
