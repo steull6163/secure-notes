@@ -18,7 +18,7 @@
             <textarea class="area-size" [class.hidden]="false" type="text" matInput formControlName="note"></textarea>
         </mat-form-field> 
         <span class="title-field">
-            <mat-checkbox class="raw-checkbox" (change)="showRaw($event)" color="primary" [checked]="raw" formControlName="raw">
+            <mat-checkbox class="raw-checkbox" (change)="toggleView($event)" color="primary" [checked]="raw" formControlName="raw">
                 raw?
             </mat-checkbox>            
         </span>
