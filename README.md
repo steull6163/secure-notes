@@ -1,4 +1,4 @@
-# Secret Notes
+# Secure Notes
 
 Tech decisions:
 * latest LTS Java 17
