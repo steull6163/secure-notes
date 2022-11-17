@@ -23,4 +23,20 @@
             </mat-checkbox>            
         </span>
     </div>
+    <br><br><br><br>
+    <div (click)="toggleDbView()">Database View</div>
+    <div class="flex-container" *ngIf="database">
+        <table mat-table matSort [dataSource]="secureNotesDataSource" class="mat-elevation-z8" #wineSort="matSort">
+            <ng-container matColumnDef="title">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Titel</th>
+                <td mat-cell *matCellDef="let secureNote">{{secureNote.title}}</td>
+            </ng-container>
+            <ng-container matColumnDef="note">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Notiz</th>
+                <td mat-cell *matCellDef="let secureNote">{{secureNote.note}}</td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
+            <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
+        </table>
+    </div>
 </div>  

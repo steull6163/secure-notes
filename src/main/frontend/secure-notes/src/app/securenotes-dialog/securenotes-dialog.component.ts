@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SecureNote } from '../app.model';
 import { SecureNotesService } from '../services/securenotes.service';
@@ -19,11 +20,14 @@ export class SecurenotesDialog implements OnInit {
   note: boolean = false;
   title: boolean = false;
   changed: boolean = false;
+  database: boolean = false;
   titles: string[] = [];
   displayedNote: string  = "";
   notesForm: FormGroup;
   notes: SecureNote[] = [];
   clickTitle: string = KLICK;
+  secureNotesDataSource = new MatTableDataSource<SecureNote>();
+  columnsToDisplay = ["title", "note"];
 
   constructor(private fb: FormBuilder,
     private router: Router,
@@ -50,9 +54,8 @@ export class SecurenotesDialog implements OnInit {
 
   ngOnInit(): void {
     console.log("SecurenotesDialog#ngOnInit");
-    this.secureNotesService.getSecureNotes().subscribe(notes => {
-      this.notes = notes;
-      this.notes.forEach(note => this.titles.push(note.title));
+    this.secureNotesService.getTitles().subscribe(titles => {
+      this.titles = titles;
       this.titles.push("NEW");
     }); 
   }
@@ -61,33 +64,31 @@ export class SecurenotesDialog implements OnInit {
     this.notesForm.controls["note"].setValue("");
     const selectedTitle = this.notesForm.controls["title"].value;
     console.log("SecurenotesDialog#get " + selectedTitle);
-    const secureNote = this.notes.find(secureNote => secureNote.title === selectedTitle);
-    if (secureNote) {
+    this.secureNotesService.get(selectedTitle).subscribe(secureNote => {
       const text = this.secureNotesService.decrypt(secureNote.note);
       this.notesForm.controls["note"].setValue(text, { emitModelToViewChange: true });
       this.changed = false;
       this.note = true;
-    }
+    });
   }
 
   put() {
     console.log("SecurenotesDialog#put " + this.notesForm.controls["title"].value);
     // TODO: validate form
-    this.secureNotesService.updateSecureNote(this.notesForm.value);
+    this.secureNotesService.update(this.notesForm.value);
+    this.reset()
   }
 
   post() {
     console.log("pSecurenotesDialog#post " + this.notesForm.controls["title"].value);
     // TODO: validate form
-    this.secureNotesService.createSecureNote(this.notesForm.value).subscribe(note => {
+    this.secureNotesService.post(this.notesForm.value).subscribe(note => {
       this.notes.push(note);
-      this.clickTitle = KLICK;
-      this.notesForm.controls["title"].setValue("");
-      this.notesForm.controls["note"].setValue("");
       const NEW = this.titles.pop();
       this.titles.push(note.title);
-      this.titles.push(NEW!); 
-    });
+      this.titles.push(NEW!);
+      this.reset();      
+    });      
   }
     
   delete() {
@@ -95,9 +96,10 @@ export class SecurenotesDialog implements OnInit {
     const selectedTitle = this.notesForm.controls["title"].value;
     const secureNote = this.notes.find(secureNote => secureNote.title === selectedTitle);
     if (secureNote && secureNote.id) {
-      this.secureNotesService.deleteSecureNote(secureNote.id);
+      this.secureNotesService.delete(secureNote.id);
     }
     this.notes = this.notes.filter(note => note.title !== selectedTitle);
+    this.reset();
   }
 
   toggleView(event: MatCheckboxChange) {  
@@ -122,5 +124,23 @@ export class SecurenotesDialog implements OnInit {
     this.notesForm.controls["title"].setValue("");
     this.clickTitle = "";
     this.new = true;
+  }
+
+  toggleDbView() {
+    this.secureNotesService.getNotes().subscribe(notes => {
+      this.secureNotesDataSource.data = notes;
+      this.database = !this.database;
+      this.notes = notes;
+    });
+  }
+
+  private reset() {
+    this.clickTitle = KLICK;
+    this.notesForm.controls["title"].setValue("");
+    this.notesForm.controls["note"].setValue("");
+    this.database = false;
+    this.changed = false;
+    this.note = false;
+    this.new = false;
   }
 }
