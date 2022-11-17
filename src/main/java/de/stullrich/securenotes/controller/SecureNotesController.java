@@ -23,33 +23,39 @@ public class SecureNotesController {
 		return modelAndView;
 	}
 
-	@GetMapping("/rest/note")
+	@GetMapping("/rest/note/titles")
 	@ResponseStatus(HttpStatus.OK)
-	public List getSecureNotes() {
-		return service.getAll();
+	public List<String> getTitles() {
+		return service.getTitles();
 	}
 
-	@GetMapping("/rest/note/{id}")
+	@GetMapping("/rest/note")
 	@ResponseStatus(HttpStatus.OK)
-	public SecureNote getSecureNote(@PathVariable long id) {
-		return service.get(id);
+	public List<SecureNote> getNotes() {
+		return service.getNotes();
+	}
+
+	@GetMapping("/rest/note/{title}")
+	@ResponseStatus(HttpStatus.OK)
+	public SecureNote get(@PathVariable String title) {
+		return service.get(title);
 	}
 
 	@PostMapping("/rest/note")
 	@ResponseStatus(HttpStatus.CREATED)
-	public SecureNote createSecureNote(@RequestBody SecureNote secureNote) {
+	public SecureNote post(@RequestBody SecureNote secureNote) {
 		return service.createOrUpdate(null, secureNote);
 	}
 
 	@PutMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.OK)
-	public SecureNote updateSecureNote(@PathVariable long id, @RequestBody SecureNote secureNote) {
+	public SecureNote update(@PathVariable long id, @RequestBody SecureNote secureNote) {
 		return service.createOrUpdate(id, secureNote);
 	}
 
 	@DeleteMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void deleteSecureNote(@PathVariable long id) {
+	public void delete(@PathVariable long id) {
 		service.delete(id);
 	}
 }

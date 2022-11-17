@@ -5,6 +5,7 @@ import de.stullrich.securenotes.repository.SecureNotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
@@ -17,14 +18,20 @@ public class SecureNotesService {
 
 	private static final AtomicLong atomicLong = new AtomicLong(10);
 
-	public List<SecureNote> getAll() {
+	public List<String> getTitles() {
+		List<String> titles = new ArrayList<>();
+		getNotes().stream().forEach(note -> titles.add(note.getTitle()));
+		return titles;
+	}
+
+	public List<SecureNote> getNotes() {
 		List<SecureNote> secureNotes = repository.findAll();
 		return secureNotes;
 	}
 
-	public SecureNote get(Long id) {
+	public SecureNote get(String title) {
 		SecureNote secureNote = null;
-		Optional<SecureNote> optional = repository.findById(id);
+		Optional<SecureNote> optional = getNotes().stream().filter(note -> note.getTitle().equals(title)).findFirst();
 		if (optional.isPresent()) {
 			secureNote = optional.get();
 		}
@@ -48,7 +55,7 @@ public class SecureNotesService {
 	}
 
 	public void delete(Long id) {
-		Optional<SecureNote> secureNote = repository. findById(id);
+		Optional<SecureNote> secureNote = repository.findById(id);
 		if (secureNote.isPresent()) {
 			repository.delete(secureNote.get());
 		}

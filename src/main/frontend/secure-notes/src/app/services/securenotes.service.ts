@@ -9,7 +9,6 @@ import { SecureNote } from '../app.model';
 })
 export class  SecureNotesService {
   
-  private host: any;
   private apiUrl: string = "/rest/note"; // "http://localhost:8080/rest/note";
   private httpOptions = {
     headers: new HttpHeaders({
@@ -17,36 +16,38 @@ export class  SecureNotesService {
     })
   }
 
-  constructor(private http: HttpClient,
-    private route: ActivatedRoute) {
-      this.host = route.firstChild?.outlet;
-    }
+  constructor(private http: HttpClient) {
+  }
 
-  getSecureNotes(): Observable<SecureNote[]> {
-    console.log("SecureNotesService#getSecureNotes -> " + this.apiUrl);
+  getTitles(): Observable<string[]> {
+    console.log("SecureNotesService#getTitles -> " + this.apiUrl + "/titles");
+    return this.http.get<string[]>(this.apiUrl + "/titles", this.httpOptions);
+  }
+
+  getNotes(): Observable<SecureNote[]> {
+    console.log("SecureNotesService#getNotes -> " + this.apiUrl);
     return this.http.get<SecureNote[]>(this.apiUrl, this.httpOptions);
   }
 
-  getSecureNote(id: number): Observable<SecureNote> {
-    console.log("SecureNotesService#getSecureNote -> " + this.apiUrl + "/" + id);
-    return this.http.get<SecureNote>(this.apiUrl + "/" + id, this.httpOptions);
+  get(title: string): Observable<SecureNote> {
+    console.log("SecureNotesService#get -> " + this.apiUrl + "/" + title);
+    return this.http.get<SecureNote>(this.apiUrl + "/" + title, this.httpOptions);
   }
 
-  createSecureNote(secureNote: SecureNote): Observable<SecureNote> {
-    console.log("SecureNotesService#createSecureNote -> " + this.apiUrl);
+  post(secureNote: SecureNote): Observable<SecureNote> {
     secureNote.note = this.encrypt(secureNote.note);
-    console.log(this.route.url);
+    console.log("SecureNotesService#post -> " + this.apiUrl + " " + secureNote.title);
     return this.http.post<SecureNote>(this.apiUrl, secureNote, this.httpOptions);
   }
 
-  updateSecureNote(secureNote: SecureNote): Observable<SecureNote> {
-    console.log("SecureNotesService#updateSecureNotes -> " + this.apiUrl);
+  put(secureNote: SecureNote): Observable<SecureNote> {
     secureNote.note = this.encrypt(secureNote.note);
+    console.log("SecureNotesService#put -> " + this.apiUrl + " " + secureNote.title);
     return this.http.put<SecureNote>(this.apiUrl, secureNote, this.httpOptions);
   }
 
-  deleteSecureNote(id: number): void {
-    console.log("SecureNotesService#deleteSecureNotes -> " + this.apiUrl + "/" + id);
+  delete(id: number): void {
+    console.log("SecureNotesService#delete -> " + this.apiUrl + "/" + id);
     this.http.delete(this.apiUrl + "/" + id, this.httpOptions);
   }
 

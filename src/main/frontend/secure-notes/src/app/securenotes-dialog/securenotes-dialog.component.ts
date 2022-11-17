@@ -75,12 +75,12 @@ export class SecurenotesDialog implements OnInit {
   put() {
     console.log("SecurenotesDialog#put " + this.notesForm.controls["title"].value);
     // TODO: validate form
-    this.secureNotesService.update(this.notesForm.value);
+    this.secureNotesService.put(this.notesForm.value);
     this.reset()
   }
 
   post() {
-    console.log("pSecurenotesDialog#post " + this.notesForm.controls["title"].value);
+    console.log("SecurenotesDialog#post " + this.notesForm.controls["title"].value);
     // TODO: validate form
     this.secureNotesService.post(this.notesForm.value).subscribe(note => {
       this.notes.push(note);
@@ -127,6 +127,7 @@ export class SecurenotesDialog implements OnInit {
   }
 
   toggleDbView() {
+    console.log("SecurenotesDialog#toggleDbView");
     this.secureNotesService.getNotes().subscribe(notes => {
       this.secureNotesDataSource.data = notes;
       this.database = !this.database;
@@ -135,6 +136,7 @@ export class SecurenotesDialog implements OnInit {
   }
 
   private reset() {
+    console.log("SecurenotesDialog#reset");
     this.clickTitle = KLICK;
     this.notesForm.controls["title"].setValue("");
     this.notesForm.controls["note"].setValue("");

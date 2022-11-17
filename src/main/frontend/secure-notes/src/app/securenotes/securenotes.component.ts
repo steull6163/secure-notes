@@ -16,11 +16,12 @@ export class SecurenotesComponent implements OnInit {
   constructor(private secuteNotesService: SecureNotesService) { }
 
   ngOnInit(): void {
-    this.getSecureNotes();
+    this.getNotes();
   }
 
-  private getSecureNotes() {
-    this.secuteNotesService.getSecureNotes().subscribe(notes => {
+  private getNotes() {
+    console.log("SecurenotesComponent#getNotes");
+    this.secuteNotesService.getNotes().subscribe(notes => {
       console.log("received " + notes.length + " notes");
       this.secureNotesDataSource.data = notes;
     });
