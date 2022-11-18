@@ -1,13 +1,15 @@
 .title-field {
-    width: 110px;
+    width: 200px;
     height: 25px;
     vertical-align: top;
 }
 
-.raw-checkbox {
+.top {
     vertical-align: top;
-    margin-left: 10px;
-    margin-top: 5px;
+}
+
+.max-space {
+    margin-left: 66%;
 }
 
 .note-field {
@@ -21,7 +23,7 @@
 }
 
 .get-button-space {
-    margin-left: 47px
+    margin-left: 137px
 }
 
 .button-space {

@@ -3,6 +3,7 @@
     <button *ngIf="new" mat-raised-button class="button-space" (click)="post()">POST</button>
     <button *ngIf="!new && changed" mat-raised-button class="button-space" (click)="put()">PUT</button>
     <button *ngIf="!new && note" mat-raised-button class="button-space" (click)="delete()">DELETE</button>
+    <button *ngIf="note" mat-raised-button class="max-space" (click)="toggleEncryption()">{{choice}}</button>
     <div [formGroup]="notesForm" class="alignTop">
         <mat-form-field class="title-field" appearance="outline">
             <mat-label [cdkTrapFocusAutoCapture]="new" [cdkTrapFocus]="new">{{clickTitle}}</mat-label>
@@ -15,24 +16,19 @@
         </mat-form-field>
         <mat-form-field class="note-field" appearance="outline">
             <mat-label></mat-label>
-            <textarea class="area-size" [class.hidden]="false" type="text" matInput formControlName="note"></textarea>
+            <textarea class="area-size" type="text" matInput formControlName="note"></textarea>
         </mat-form-field> 
-        <span class="title-field">
-            <mat-checkbox class="raw-checkbox" (change)="toggleView($event)" color="primary" [checked]="raw" formControlName="raw">
-                raw?
-            </mat-checkbox>            
-        </span>
     </div>
-    <br><br><br><br>
-    <div (click)="toggleDbView()">Database View</div>
-    <div class="flex-container" *ngIf="database">
+    <br><br>
+    <button mat-raised-button class="" (click)="toggleDbView()">Database View</button>
+    <div class="flex-container" *ngIf="showDatabase">
         <table mat-table matSort [dataSource]="secureNotesDataSource" class="mat-elevation-z8" #wineSort="matSort">
             <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Titel</th>
+                <th mat-header-cell *matHeaderCellDef>Title</th>
                 <td mat-cell *matCellDef="let secureNote">{{secureNote.title}}</td>
             </ng-container>
             <ng-container matColumnDef="note">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>Notiz</th>
+                <th mat-header-cell *matHeaderCellDef>Note</th>
                 <td mat-cell *matCellDef="let secureNote">{{secureNote.note}}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>

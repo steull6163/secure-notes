@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { SecureNote } from '../app.model';
 import { SecureNotesService } from '../services/securenotes.service';
 
-const KLICK: string = "Klick...";
+const CLICK: string = "Click...";
+const CHOICES: string[] = ["Raw View?", "Clear View?"];
 
 @Component({
   selector: 'app-securenotes-dialog',
@@ -20,12 +20,13 @@ export class SecurenotesDialog implements OnInit {
   note: boolean = false;
   title: boolean = false;
   changed: boolean = false;
-  database: boolean = false;
+  showDatabase: boolean = false;
   titles: string[] = [];
+  choice: string = CHOICES[0];
   displayedNote: string  = "";
   notesForm: FormGroup;
   notes: SecureNote[] = [];
-  clickTitle: string = KLICK;
+  clickTitle: string = CLICK;
   secureNotesDataSource = new MatTableDataSource<SecureNote>();
   columnsToDisplay = ["title", "note"];
 
@@ -46,7 +47,7 @@ export class SecurenotesDialog implements OnInit {
       if (this.displayedNote == "") {
         this.displayedNote = value;
       }
-      if (this.displayedNote !== value) {
+      if (this.displayedNote !== value && !this.raw) {
         this.changed = true;
       }
     });
@@ -87,7 +88,8 @@ export class SecurenotesDialog implements OnInit {
       const NEW = this.titles.pop();
       this.titles.push(note.title);
       this.titles.push(NEW!);
-      this.reset();      
+      this.reset(); 
+      this.updateDB();     
     });      
   }
     
@@ -102,19 +104,21 @@ export class SecurenotesDialog implements OnInit {
     this.reset();
   }
 
-  toggleView(event: MatCheckboxChange) {  
+  toggleEncryption() {  
     console.log("SecurenotesDialog#toggleView"); 
     const secureNote = this.notesForm.value;    
-    if (event.checked) {
+    this.raw = !this.raw;
+    if (this.raw) {
       // encrypt
       this.displayedNote = this.secureNotesService.encrypt(secureNote!.note);
-      this.notesForm.controls["note"].setValue(this.displayedNote, { emitModelToViewChange: true });     
+      this.notesForm.controls["note"].setValue(this.displayedNote, { emitModelToViewChange: true });   
+      this.choice = CHOICES[1];  
     } else {
       // decrypt
       this.displayedNote = this.secureNotesService.decrypt(this.notesForm.controls["note"].value);
       this.notesForm.controls["note"].setValue(this.displayedNote, { emitModelToViewChange: true });
-    }   
-    this.raw = event.checked;
+      this.choice = CHOICES[0];  
+    }
     this.changed = false;
   }
 
@@ -128,19 +132,23 @@ export class SecurenotesDialog implements OnInit {
 
   toggleDbView() {
     console.log("SecurenotesDialog#toggleDbView");
+    this.showDatabase = !this.showDatabase;
+    this.updateDB();
+  }
+
+  private updateDB() {
+    console.log("SecurenotesDialog#updateDB");
     this.secureNotesService.getNotes().subscribe(notes => {
       this.secureNotesDataSource.data = notes;
-      this.database = !this.database;
       this.notes = notes;
     });
   }
 
   private reset() {
     console.log("SecurenotesDialog#reset");
-    this.clickTitle = KLICK;
+    this.clickTitle = CLICK;
     this.notesForm.controls["title"].setValue("");
     this.notesForm.controls["note"].setValue("");
-    this.database = false;
     this.changed = false;
     this.note = false;
     this.new = false;
