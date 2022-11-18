@@ -1,8 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { SecureNote } from '../app.model';
+import { DecryptPipe, EncryptPipe } from '../crypt/enctypt-decrytp.pipe';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,9 @@ export class  SecureNotesService {
     })
   }
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private encryptPipe: EncryptPipe,
+    private decryptPipe: DecryptPipe) {
   }
 
   getTitles(): Observable<string[]> {
@@ -53,16 +55,11 @@ export class  SecureNotesService {
 
   encrypt(note: string): string {                       
     console.log("SecureNotesService#encrypt");
-    const parts = note.split("_");
-    if (parts.length == 2) {
-      return "ENCRYPTED_" + parts[1];  
-    }
-    return "ENCRYPTED_" + note;
+    return this.encryptPipe.transform(note);
   }
 
   decrypt(note: string): string {
     console.log("SecureNotesService#decrypt");
-    const parts = note.split("_");
-    return "DECRYPTED_" + parts[1];
+    return this.decryptPipe.transform(note);
   }
 }
