@@ -24,6 +24,7 @@
     "crypto-js": "^4.1.1",
     "hybrid-crypto-js": "^0.2.4",
     "ngx-webstorage": "^10.0.1",
+    "node": "^18.12.1",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
