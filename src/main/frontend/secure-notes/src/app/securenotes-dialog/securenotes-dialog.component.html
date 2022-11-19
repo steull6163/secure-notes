@@ -1,35 +1,41 @@
 <div class="flex-container">
-    <button mat-raised-button class="get-button-space" (click)="get()">GET</button>
-    <button *ngIf="new" mat-raised-button class="button-space" (click)="post()">POST</button>
-    <button *ngIf="!new && changed" mat-raised-button class="button-space" (click)="put()">PUT</button>
-    <button *ngIf="!new && note" mat-raised-button class="button-space" (click)="delete()">DELETE</button>
-    <button *ngIf="note" mat-raised-button class="max-space" (click)="toggleEncryption()">{{choice}}</button>
+    <div class="button-height">
+        <button *ngIf="choosen" mat-raised-button class="get-button-space" (click)="get()" tabIndex="2" #getbutton>GET</button>
+        <button *ngIf="new" mat-raised-button class="button-space" (click)="post()">POST</button>
+        <button *ngIf="!new && !changed && note" mat-raised-button class="button-space" (click)="delete()">DELETE</button>
+        <button *ngIf="!new && changed" mat-raised-button class="button-space" (click)="put()">PUT</button>
+        <button *ngIf="note" mat-raised-button class="min-space" (click)="toggleEncryption()">{{viewChoice}}</button>
+    </div>
     <div [formGroup]="notesForm" class="alignTop">
-        <mat-form-field class="title-field" appearance="outline">
-            <mat-label [cdkTrapFocusAutoCapture]="new" [cdkTrapFocus]="new">{{clickTitle}}</mat-label>
-            <input type="text" matInput formControlName="title" (value)="prepareNew()" class="form-control" [matAutocomplete]="auto3">
+        <mat-form-field class="choice-field" appearance="outline">
+            <mat-label>{{clickBox}}</mat-label>
+            <input type="text" matInput formControlName="choice" (value)="prepareNew()" class="form-control" [matAutocomplete]="auto3" (click)="reset()" tabIndex="1">
             <mat-autocomplete #auto3="matAutocomplete" autoActiveFirstOption="true">
-                <mat-option *ngFor="let title of titles" [value]="title">
-                    {{title}}
+                <mat-option *ngFor="let choice of choices" [value]="choice"  (click)="choose(choice)">
+                    {{choice}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
+        <mat-form-field class="title-field" appearance="outline">
+            <mat-label [cdkTrapFocusAutoCapture]="new" [cdkTrapFocus]="new">{{titleBox}}</mat-label>
+            <input #titleinput type="text" matInput formControlName="title" value="{{title}}" class="form-control" tabIndex="3">
+        </mat-form-field>
         <mat-form-field class="note-field" appearance="outline">
-            <mat-label></mat-label>
-            <textarea class="area-size" type="text" matInput formControlName="note"></textarea>
-        </mat-form-field> 
+            <mat-label>{{noteBox}}</mat-label>
+            <textarea class="area-size" type="text" matInput formControlName="note" tabIndex="4"></textarea>
+        </mat-form-field>
     </div>
-    <br><br>
-    <button mat-raised-button class="" (click)="toggleDbView()">Database View</button>
-    <div class="flex-container" *ngIf="showDatabase">
-        <table mat-table matSort [dataSource]="secureNotesDataSource" class="mat-elevation-z8" #wineSort="matSort">
-            <ng-container matColumnDef="title">
-                <th mat-header-cell *matHeaderCellDef>Title</th>
-                <td mat-cell *matCellDef="let secureNote">{{secureNote.title}}</td>
+    <br>
+    <button mat-raised-button class="" (click)="toggleDbView()">Remote Database View</button>
+    <div class="flex-container" *ngIf="showDatabase">  
+        <table mat-table [dataSource]="secureNotesDataSource" class="width-db">
+            <ng-container matColumnDef="title" class="lenghht">
+                <th class="width-db-title" mat-header-cell *matHeaderCellDef>Title</th>
+                <td class="width-db-title" mat-cell *matCellDef="let secureNote">{{secureNote.title}}</td>
             </ng-container>
             <ng-container matColumnDef="note">
-                <th mat-header-cell *matHeaderCellDef>Note</th>
-                <td mat-cell *matCellDef="let secureNote">{{secureNote.note}}</td>
+                <th class="width-db-note" mat-header-cell *matHeaderCellDef>Note</th>
+                <td class="width-db-note" mat-cell *matCellDef="let secureNote">{{secureNote.note}}</td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="columnsToDisplay; sticky: true"></tr>
             <tr mat-row *matRowDef="let row; columns: columnsToDisplay;"></tr>
