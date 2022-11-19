@@ -45,21 +45,21 @@ export class  SecureNotesService {
   put(secureNote: SecureNote): Observable<SecureNote> {
     secureNote.note = this.encrypt(secureNote.note);
     console.log("SecureNotesService#put -> " + this.apiUrl + " " + secureNote.title);
-    return this.http.put<SecureNote>(this.apiUrl, secureNote, this.httpOptions);
+    return this.http.put<SecureNote>(this.apiUrl + "/" + secureNote.id, secureNote, this.httpOptions);
   }
 
-  delete(id: number): void {
+  delete(id: number): Observable<any> {
     console.log("SecureNotesService#delete -> " + this.apiUrl + "/" + id);
-    this.http.delete(this.apiUrl + "/" + id, this.httpOptions);
-  }
-
-  encrypt(note: string): string {                       
-    console.log("SecureNotesService#encrypt");
-    return this.encryptPipe.transform(note);
+    return this.http.delete(this.apiUrl + "/" + id, this.httpOptions);
   }
 
   decrypt(note: string): string {
     console.log("SecureNotesService#decrypt");
     return this.decryptPipe.transform(note);
+  }
+
+  private encrypt(note: string): string {
+    console.log("SecureNotesService#encrypt");
+    return this.encryptPipe.transform(note);
   }
 }
