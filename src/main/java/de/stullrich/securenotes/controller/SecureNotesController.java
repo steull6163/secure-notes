@@ -55,7 +55,7 @@ public class SecureNotesController {
 
 	@DeleteMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
-	public void delete(@PathVariable long id) {
-		service.delete(id);
+	public boolean delete(@PathVariable long id) {
+		return service.delete(id);
 	}
 }

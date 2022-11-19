@@ -31,7 +31,7 @@ public class SecureNotesService {
 
 	public SecureNote get(String title) {
 		SecureNote secureNote = null;
-		Optional<SecureNote> optional = getNotes().stream().filter(note -> note.getTitle().equals(title)).findFirst();
+		Optional<SecureNote> optional = repository.findByTitle(title);
 		if (optional.isPresent()) {
 			secureNote = optional.get();
 		}
@@ -54,11 +54,14 @@ public class SecureNotesService {
 		return createdOrUpdated;
 	}
 
-	public void delete(Long id) {
+	public boolean delete(Long id) {
+		boolean result = false;
 		Optional<SecureNote> secureNote = repository.findById(id);
 		if (secureNote.isPresent()) {
-			repository.delete(secureNote.get());
+				repository.delete(secureNote.get());
+				result = true;
 		}
+		return result;
 	}
 
 	public static Long getId() {
