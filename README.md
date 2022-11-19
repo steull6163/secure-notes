@@ -1,9 +1,9 @@
 # Secure Notes
 
-A simple Spring Boot App for creating and storing text notes that are securely encrypted.
-The App consists of a Spring REST Service with a database and an angular frontend.
+A simple Spring Boot Application for creating and storing text notes that are securely encrypted.
+The Application consists of a Spring REST Service with a database and an angular frontend, all within an executable jar.
 The question of how to provide security for the content is to be answered.
-The reasons for decisions made are stated below.
+Reasons for the decisions made according to the software design are stated below.
 
 Tech decisions:
 * latest LTS Java 17
@@ -12,6 +12,8 @@ Tech decisions:
 * Lombok -> no boilerplate
 * Tomcat -> included
 * h2 -> lightweight and easy
+* angular 14.2.9 
+* node 18.12.1  
 
 Sec decisions:
 * plain text upload/download -> BAD
