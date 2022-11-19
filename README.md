@@ -5,6 +5,11 @@ The Application consists of a Spring REST Service with a database and an angular
 The question of how to provide security for the content is to be answered.
 Reasons for the decisions made according to the software design are stated below.
 
+Requirements:
+The user should be able to post notes to an endpoint of the API and store it in a database in an encrypted format.
+The user should then be able to retrieve these notes in a readable format.
+The user should also be able to see the notes in the encrypted format.
+
 Tech decisions:
 * latest LTS Java 17
 * latest Spring Boot 2.75
