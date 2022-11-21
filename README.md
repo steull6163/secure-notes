@@ -27,6 +27,4 @@ Sec decisions:
 * => NO unencrypted data transfer!
 * => NO unencrypted data on the server!
 * => NO encryption keys on the server!
-* => Client side encryption with public key
-
-Alg desicions:
+* => Client side encryption
