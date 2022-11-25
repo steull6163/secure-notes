@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+    <title>JavaScript RSA Encryption</title>
+    <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+    <script src="jsencrypt.min.js"></script>
+    <script type="text/javascript">
+
+      // Call this code when the page is done loading.
+      $(function() {
+
+        // Run a quick encryption/decryption when they click.
+        $('#testRSA').click(function() {
+
+          // Encrypt with the public key...
+          var encrypt = new JSEncrypt();
+          encrypt.setPublicKey($('#pubkey').val());
+          var encrypted = encrypt.encrypt($('#input').val());
+          document.getElementById("output").innerHTML = encrypted;
+
+          // Decrypt with the private key...
+          var decrypt = new JSEncrypt();
+          decrypt.setPrivateKey($('#privkey').val());
+          var uncrypted = decrypt.decrypt(encrypted);
+
+          // Now a simple check to see if the round-trip worked.
+          if (uncrypted == $('#input').val()) {
+            alert('It works!!!');
+          }
+          else {
+            alert('Something went wrong....');
+          }
+        });
+      });
+    </script>
+</head>
+<body>
+<label for="privkey">Private Key</label><br/>
+<textarea id="privkey" rows="15" cols="65">-----BEGIN RSA PRIVATE KEY-----
+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
+-----END RSA PRIVATE KEY-----</textarea><br/>
+<label for="pubkey">Public Key</label><br/>
+<textarea id="pubkey" rows="15" cols="65">-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEA1s7cX1PVIWJA7BuBKaza
+gLvRuw7CEuEX2sWoL9aFl2RTsxYbtrlWhE+1IyvqEtA7q9c5qcdlX8ztJR5Ncbyb
+48NbfydTly+C18bQe8/OEqoi/OKsa8emfPyGCyNNXyl/yP/ZhR2LCKtsRa5OnRke
+3Ey6g/ezWYimMh5ZvTEQmt/vjbWfkVRmD9R/+avOx/GZqTzSu91Gl+v1fM8hfcAo
+iN3pJ7VWCXPqY7yV15FwmwESHyBlrFFhlezOviPxCA1ImZXl66GLQyFLTxYSF55l
+7vuy32aGSsyhXEnqkp8c8L5ArLeSoz6tnnKM1IHshoYqSkbAG0lkr3EiGbbk2cGq
+uhB2OxMO3pk/g7bnxsZsQz3CQofpLieck3a1eO9jeMFQcggruZe4XLHsrH64zqNj
+iMosv/clgph+H/qXLLj8/mnC6c8OhEG4BbDJTvHFA+OAAjn6mGY4/jvPGasyV6tm
+NHOw/8AF258BG9rhAdmHmcJKPNKlfnxtbXLQmy6LIMgLkQ9fLWbbSBLqgNDCv40H
+e5bR88lx6IPlSrX0v+h+qWnw9Wg6CoYeYapavPfVDYXwLSN77xqwOvxnK6UeGcjD
+n20/B/5yKU/CVpZijIkTYt8DhoEHZiMCgkAcuXthMJooqm/6cRTClbOviOxYLqQR
+gpRZbnuIIUihmg9qD2Yjwz0CAwEAAQ==
+-----END PUBLIC KEY-----</textarea><br/>
+<label for="input">Text to encrypt:</label><br/>
+<textarea id="input" name="input" type="text" rows=4 cols=70>This is a test!</textarea><br/>
+<p id="output"></p>
+<input id="testRSA" type="button" value="test RSA" /><br/>
+<br>
+<input id="testAES" type="button" value="test AES"(click)="encrypt(#input').val()" /><br />
+</body>
+</html>

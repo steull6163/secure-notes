@@ -16,7 +16,7 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
   declarations: [
     AppComponent,
     SecurenotesComponent,
-    SecurenotesDialog,
+    SecurenotesDialog
   ],
   imports: [
     AppRoutingModule,
@@ -29,11 +29,8 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
     NgxWebstorageModule.forRoot(),
     ReactiveFormsModule
   ],
-  exports: [
-    
-  ],
-  providers: [ ],
-  bootstrap: [AppComponent ]
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
 
