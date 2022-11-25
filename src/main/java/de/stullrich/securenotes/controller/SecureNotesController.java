@@ -1,5 +1,6 @@
 package de.stullrich.securenotes.controller;
 
+import de.stullrich.securenotes.model.KeyPair;
 import de.stullrich.securenotes.model.SecureNote;
 import de.stullrich.securenotes.service.SecureNotesService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,14 @@ public class SecureNotesController {
 		return service.getNotes();
 	}
 
+
+	@GetMapping("/rest/note/keys")
+	@ResponseStatus(HttpStatus.OK)
+	public KeyPair getKeys() {
+		return service.getKeys();
+	}
+
+
 	@GetMapping("/rest/note/{title}")
 	@ResponseStatus(HttpStatus.OK)
 	public SecureNote get(@PathVariable String title) {
@@ -56,6 +65,10 @@ public class SecureNotesController {
 	@DeleteMapping("/rest/note/{id}")
 	@ResponseStatus(HttpStatus.ACCEPTED)
 	public boolean delete(@PathVariable long id) {
-		return service.delete(id);
+		try {
+			return service.delete(id);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

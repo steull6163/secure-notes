@@ -1,6 +1,8 @@
 package de.stullrich.securenotes.service;
 
+import de.stullrich.securenotes.model.KeyPair;
 import de.stullrich.securenotes.model.SecureNote;
+import de.stullrich.securenotes.repository.KeyPairRepository;
 import de.stullrich.securenotes.repository.SecureNotesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,9 @@ public class SecureNotesService {
 
 	@Autowired
 	private SecureNotesRepository repository;
+
+	@Autowired
+	private KeyPairRepository keyPairRepository;
 
 	private static final AtomicLong atomicLong = new AtomicLong(10);
 
@@ -38,20 +43,21 @@ public class SecureNotesService {
 		return secureNote;
 	}
 
-	public SecureNote createOrUpdate(Long id, SecureNote secureNote) {
-		SecureNote createdOrUpdated = null;
-		if (id == null && secureNote.getId() == null) {
-			Long newId = atomicLong.getAndIncrement();
-			secureNote.setId(newId);
-			createdOrUpdated = repository.save(secureNote);
-		} else {
-			if (id.equals(secureNote.getId())) {
-				createdOrUpdated = repository.save(secureNote);
-			} else {
-				// throw exception
-			}
+	public SecureNote createOrUpdate(Long id, SecureNote note) {
+		Optional<SecureNote> optional = repository.findByTitle(note.getTitle());
+		SecureNote secureNote = null;
+		if (optional.isPresent()) {
+			secureNote = optional.get();
 		}
-		return createdOrUpdated;
+		if (id == null && secureNote == null) {
+			// create
+			note.setId(atomicLong.getAndIncrement());
+			secureNote = note;
+		} else {
+			// update
+			secureNote.setNote(note.getNote());
+		}
+		return repository.save(secureNote);
 	}
 
 	public boolean delete(Long id) {
@@ -66,5 +72,14 @@ public class SecureNotesService {
 
 	public static Long getId() {
 		return atomicLong.getAndIncrement();
+	}
+
+	public KeyPair getKeys() {
+		KeyPair keyPair = null;
+		List<KeyPair> keyList = keyPairRepository.findAll();
+		if (!keyList.isEmpty()) {
+			keyPair = keyList.get(0);
+		}
+		return keyPair;
 	}
 }

@@ -1,6 +1,6 @@
 package de.stullrich.securenotes;
 
-import de.stullrich.securenotes.util.DatabaseUtil;
+import de.stullrich.securenotes.util.DatabaseTestData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,13 +19,11 @@ public class SecureNotesApplication implements CommandLineRunner {
 	private static final Logger logger = LoggerFactory.getLogger(SecureNotesApplication.class);
 
 	@Autowired
-	private DatabaseUtil databaseUtil;
+	private DatabaseTestData databaseTestData;
 
 	public static void main(String[] args) {
-
 		ApplicationContext applicationContext =
 				SpringApplication.run(SecureNotesApplication.class, args);
-
 		for (String name : applicationContext.getBeanDefinitionNames()) {
 			System.out.println(name);
 		}
@@ -33,6 +31,6 @@ public class SecureNotesApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		databaseUtil.createDatabase();
+		databaseTestData.createDatabase();
 	}
 }
