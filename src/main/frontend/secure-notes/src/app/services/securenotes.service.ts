@@ -2,14 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SecureNote } from '../app.model';
-import { DecryptPipe, EncryptPipe } from '../crypt/enctypt-decrytp.pipe';
+import { CryptoService } from './crypto.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class  SecureNotesService {
   
-  private apiUrl: string = "/rest/note"; // "http://localhost:8080/rest/note";
+  private apiUrl: string = "/rest/note";
   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
@@ -17,8 +17,7 @@ export class  SecureNotesService {
   }
 
   constructor(private http: HttpClient,
-    private encryptPipe: EncryptPipe,
-    private decryptPipe: DecryptPipe) {
+    private cryptoService: CryptoService) {
   }
 
   getTitles(): Observable<string[]> {
@@ -37,13 +36,15 @@ export class  SecureNotesService {
   }
 
   post(secureNote: SecureNote): Observable<SecureNote> {
-    secureNote.note = this.encrypt(secureNote.note);
+    if (secureNote.note) {
+      secureNote.note = this.cryptoService.encrypt(secureNote.note);
+    }
     console.log("SecureNotesService#post -> " + this.apiUrl + " " + secureNote.title);
     return this.http.post<SecureNote>(this.apiUrl, secureNote, this.httpOptions);
   }
 
   put(secureNote: SecureNote): Observable<SecureNote> {
-    secureNote.note = this.encrypt(secureNote.note);
+    secureNote.note = this.cryptoService.encrypt(secureNote.note);
     console.log("SecureNotesService#put -> " + this.apiUrl + " " + secureNote.title);
     return this.http.put<SecureNote>(this.apiUrl + "/" + secureNote.id, secureNote, this.httpOptions);
   }
@@ -53,13 +54,4 @@ export class  SecureNotesService {
     return this.http.delete(this.apiUrl + "/" + id, this.httpOptions);
   }
 
-  decrypt(note: string): string {
-    console.log("SecureNotesService#decrypt");
-    return this.decryptPipe.transform(note);
-  }
-
-  private encrypt(note: string): string {
-    console.log("SecureNotesService#encrypt");
-    return this.encryptPipe.transform(note);
-  }
 }

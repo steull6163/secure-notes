@@ -10,9 +10,7 @@ import { AppComponent } from './app.component';
 import { SecurenotesComponent } from './securenotes/securenotes.component';
 import { SecurenotesDialog } from './securenotes-dialog/securenotes-dialog.component';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
-import { EncryptPipe, DecryptPipe } from './crypt/enctypt-decrytp.pipe';
 import { NgxWebstorageModule } from 'ngx-webstorage';
-//import { } from 'rsa-aes-hybrid';
 
 @NgModule({
   declarations: [
@@ -34,8 +32,8 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
   exports: [
     
   ],
-  providers: [ EncryptPipe, DecryptPipe ],
-  bootstrap: [AppComponent]
+  providers: [ ],
+  bootstrap: [AppComponent ]
 })
 export class AppModule { }
 

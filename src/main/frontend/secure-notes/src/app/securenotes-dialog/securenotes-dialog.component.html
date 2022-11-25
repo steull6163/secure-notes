@@ -25,7 +25,7 @@
             <textarea class="area-size" type="text" matInput formControlName="note" tabIndex="4"></textarea>
         </mat-form-field>
     </div>
-    <button mat-raised-button class="" (click)="toggleDbView()">Remote Database View</button>
+    <button mat-raised-button class="" (click)="toggleDbView()" *ngIf="showDbButton">Remote Database View</button>
     <div class="flex-container" *ngIf="showDatabase">  
         <table mat-table [dataSource]="notesDataSource" class="width-db">
             <ng-container matColumnDef="title" class="lenghht">

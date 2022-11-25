@@ -8,3 +8,15 @@ export class SecureNote {
         this.note = "";
     }
 }
+
+export class Keys {
+    id?: number;
+    publicKey: string;
+    privateKey: string;
+
+    constructor() {
+        this.publicKey = "";
+        this.privateKey = "";
+    }
+
+} 
