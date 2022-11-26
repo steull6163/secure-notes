@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppMaterialModule } from './app-material.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SecurenotesComponent } from './securenotes/securenotes.component';
 import { SecurenotesDialog } from './securenotes-dialog/securenotes-dialog.component';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { NgxWebstorageModule } from 'ngx-webstorage';
@@ -15,7 +14,6 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 @NgModule({
   declarations: [
     AppComponent,
-    SecurenotesComponent,
     SecurenotesDialog
   ],
   imports: [
