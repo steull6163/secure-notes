@@ -3,7 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { SecurenotesDialog } from './securenotes-dialog/securenotes-dialog.component';
 
 const routes: Routes = [
-  { path: '', component: SecurenotesDialog }];
+  { path: '', component: SecurenotesDialog }
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

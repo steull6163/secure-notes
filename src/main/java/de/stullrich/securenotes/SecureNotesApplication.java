@@ -24,9 +24,6 @@ public class SecureNotesApplication implements CommandLineRunner {
 	public static void main(String[] args) {
 		ApplicationContext applicationContext =
 				SpringApplication.run(SecureNotesApplication.class, args);
-		for (String name : applicationContext.getBeanDefinitionNames()) {
-			System.out.println(name);
-		}
 	}
 
 	@Override
