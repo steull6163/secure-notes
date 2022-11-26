@@ -1,18 +1,10 @@
 package de.stullrich.securenotes.util;
 
-import com.dracoon.sdk.crypto.Crypto;
-import com.dracoon.sdk.crypto.CryptoUtils;
-import com.dracoon.sdk.crypto.FileEncryptionCipher;
-import com.dracoon.sdk.crypto.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
 @Component
 public class DatabaseTestData {
@@ -20,7 +12,6 @@ public class DatabaseTestData {
 	private static final Logger logger = LoggerFactory.getLogger(DatabaseTestData.class);
 	private static final String USER_PASSWORD = "1234567890";
 	private static final String[] KEY_TYPES = {"private", "public", "fKey"};
-	private static final EncryptedFileKey[] FKEYS = new EncryptedFileKey[3];
 	private static final String[] CLEARTEXTS = {"The General Data Protection Regulation says: Personal data should no longer be able to be attributed to a specific data subject without additional information, provided that this additional information is kept separately and is subject to technical and organisational measures which ensure that the personal data is not attributed to an identified or identifiable natural person. The measures shall take into account the state of the art, the implementation costs as well as the type, scope, circumstances and purpose of the processing. In addition to these criteria, the different probabilities of occurrence and the severity of the risk to the rights and freedoms of the data subjects must also be taken into account. Accordingly, the level of security measures taken should be adapted. Encryption is explicitly mentioned as such a measure in the non-exhaustive catalogue of Art. 32. You must report a data breach if it poses a risk to the data subject. According to Art. 4 No. 12 GDPR, a violation of personal data exists if personal data have been lost or have been destroyed, altered or disclosed without authorisation. The supervisory authorities shall ensure that the fines provided for in the article for infringements of the GDPR are effective, proportionate and dissuasive in each individual case.",
 			"Encryption is a form of pseudonymisation. The key stands for the additional information. If the key is kept together with the data, encrypted data can be made publicly accessible, e.g. in the event of a phishing attack. Pseudonymisation is then no longer possible. In order to ensure adequate protection, personal data should be encrypted. However, not all types of encryption provide the same level of protection. For maximum security, encryption keys should be controlled by the user. No one else should have access to them during the encryption and decryption process. In the event of a data protection breach, the responsible person must report the breach to the competent supervisory authority without delay and, if possible, within 72 hours of becoming aware of the breach. Unless the breach is unlikely to create a risk to the protection of personal data. Fines are imposed according to the circumstances of the individual case. In deciding on the imposition and the amount thereof, account shall be taken in each individual case of the measures taken.",
 		    "With client-side encryption there is no possibility to decrypt the files on the server, e.g. in case of a phishing attack, because only encrypted key material is stored there. The key that encodes the data never leaves the user''s computer in plain text. If client-side encryption is used, it is impossible to decrypt the files in case of an attack on the server, because the key is held by the owner. Therefore, hacks on servers are not considered as data mishaps and the notification rules of the GDPR do not apply. This means that you save the cost of data failure notifications and possible fines, maintain your reputation and protect the privacy of your employees and customers. Since all files are encrypted on the user''s end device, only unreadable data can be known. These are not considered personal data or data mishaps. Fines are therefore avoided."};
@@ -48,69 +39,13 @@ public class DatabaseTestData {
 		jdbcTemplate.execute("CREATE TABLE key_pair (id SERIAL, public_key VARCHAR(8192), private_key VARCHAR(8192))");
 
 		logger.info("Inserting data");
-		UserKeyPair keyPair = Crypto.generateUserKeyPair(UserKeyPair.Version.RSA4096, USER_PASSWORD);
-		UserPrivateKey userPrivateKey = keyPair.getUserPrivateKey();
-
 		String query = null;
 		for (int i = 0; i < 3; i++) {
-//			query = "INSERT INTO Keys(ctype, cvalue) VALUES ('" + KEY_TYPE[2] + "', '" + "FKEY[i].getKey()" + "')";
-//			jdbcTemplate.execute(query);
 			query = "INSERT INTO securenote(title, note, fkey) VALUES ('" + TITLES[i] + "', '" + NOTES[i] + "', '" + "key" + "')";
 			jdbcTemplate.execute(query);
 		}
 		query = "INSERT INTO key_pair(public_key, private_key) VALUES ('" + PU + "', '" + AES_BASE64_PK + "')";
 		jdbcTemplate.execute(query);
-
-	}
-
-	private void generateFKeysAndNotes(UserKeyPair keyPair) {
-		try {
-			for (int i = 0; i < 3; i++) {
-				PlainFileKey fileKey = Crypto.generateFileKey(PlainFileKey.Version.AES256GCM);
-				byte[] plainData = CLEARTEXTS[i].getBytes("UTF8");
-				FKEYS[i] = Crypto.encryptFileKey(fileKey, keyPair.getUserPublicKey());
-				//NOTE[i] = encrypt(fileKey, plainData);
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	private byte[] encrypt(PlainFileKey fileKey, byte[] data) throws Exception {
-		FileEncryptionCipher cipher = Crypto.createFileEncryptionCipher(fileKey);
-		ByteArrayInputStream is = new ByteArrayInputStream(data);
-		ByteArrayOutputStream os = new ByteArrayOutputStream();
-		byte[] buffer = new byte[16];
-		byte[] encryptedData;
-		int count;
-		try {
-			EncryptedDataContainer eDataContainer;
-			while ((count = is.read(buffer)) != -1) {
-				byte[] pData = createByteArray(buffer, count);
-				eDataContainer = cipher.processBytes(new PlainDataContainer(pData));
-				os.write(eDataContainer.getContent());
-			}
-			eDataContainer = cipher.doFinal();
-			os.write(eDataContainer.getContent());
-			String tag = CryptoUtils.byteArrayToString(eDataContainer.getTag());
-			fileKey.setTag(tag);
-			encryptedData = os.toByteArray();
-		} catch (Exception e) {
-			throw new RuntimeException("Error while encrypting data!", e);
-		} finally {
-			try {
-				os.close();
-				is.close();
-			} catch (IOException e) {
-				// Nothing to do here
-			}
-		}
-		return encryptedData;
-	}
-
-	private byte[] createByteArray(byte[] bytes, int len) {
-		byte[] b = new byte[len];
-		System.arraycopy(bytes, 0, b, 0, len);
-		return b;
+		logger.info("ready");
 	}
 }
