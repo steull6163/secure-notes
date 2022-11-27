@@ -111,9 +111,9 @@ export class SecurenotesDialog implements OnInit {
     }
     else if (this.new) {
       if (this.notesForm.controls["title"].value != "" && this.notesForm.controls["note"].value != "") {
-        this.setButtonStates(false, false, true, false, false, false);
+        this.setButtonStates(false, false, true, false, this.showDatabase, false);
       } else {
-        this.setButtonStates(false, false, false, false, false, false);
+        this.setButtonStates(false, false, false, false, this.showDatabase, false);
       }
     } else {
       if (formelement === "title") {
