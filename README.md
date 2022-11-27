@@ -14,9 +14,9 @@ Tech decisions:
 * latest LTS Java 17
 * latest Spring Boot 2.75
 * Spring data, jpa, autoconfigure, test
-* Lombok -> no boilerplate
-* Tomcat -> included
-* h2 -> lightweight and easy
+* Lombok 1.18.24 -> no boilerplate
+* Tomcat 9.0.68 -> included
+* h2 2.1.214 -> lightweight and easy
 * angular 14.2.9 
 * node 18.12.1  
 
@@ -27,6 +27,4 @@ Sec decisions:
 * => NO unencrypted data transfer!
 * => NO unencrypted data on the server!
 * => NO encryption keys on the server!
-* => Client side encryption with public key
-
-Alg desicions:
+* => Client side encryption
