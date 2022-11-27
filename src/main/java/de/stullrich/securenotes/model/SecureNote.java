@@ -16,7 +16,7 @@ import javax.persistence.*;
 public class SecureNote {
 
 	@Id
-	@GeneratedValue
+//	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	@Column
 	private String title;

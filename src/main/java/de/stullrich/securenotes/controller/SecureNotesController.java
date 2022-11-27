@@ -1,12 +1,11 @@
 package de.stullrich.securenotes.controller;
 
+import de.stullrich.securenotes.model.KeyPair;
 import de.stullrich.securenotes.model.SecureNote;
 import de.stullrich.securenotes.service.SecureNotesService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -25,13 +24,51 @@ public class SecureNotesController {
 		return modelAndView;
 	}
 
-	@GetMapping("/rest/note")
-	public List getSecureNotes() {
-		return service.getAll();
+	@GetMapping("/rest/note/titles")
+	@ResponseStatus(HttpStatus.OK)
+	public List<String> getTitles() {
+		return service.getTitles();
 	}
 
-	@GetMapping("/rest/note/{id}")
-	public SecureNote getSecureNote(@PathVariable() long id) {
-		return service.get(id);
+	@GetMapping("/rest/note")
+	@ResponseStatus(HttpStatus.OK)
+	public List<SecureNote> getNotes() {
+		return service.getNotes();
+	}
+
+
+	@GetMapping("/rest/note/keys")
+	@ResponseStatus(HttpStatus.OK)
+	public KeyPair getKeys() {
+		return service.getKeys();
+	}
+
+
+	@GetMapping("/rest/note/{title}")
+	@ResponseStatus(HttpStatus.OK)
+	public SecureNote get(@PathVariable String title) {
+		return service.get(title);
+	}
+
+	@PostMapping("/rest/note")
+	@ResponseStatus(HttpStatus.CREATED)
+	public SecureNote post(@RequestBody SecureNote secureNote) {
+		return service.createOrUpdate(null, secureNote);
+	}
+
+	@PutMapping("/rest/note/{id}")
+	@ResponseStatus(HttpStatus.OK)
+	public SecureNote update(@PathVariable long id, @RequestBody SecureNote secureNote) {
+		return service.createOrUpdate(id, secureNote);
+	}
+
+	@DeleteMapping("/rest/note/{id}")
+	@ResponseStatus(HttpStatus.ACCEPTED)
+	public boolean delete(@PathVariable long id) {
+		try {
+			return service.delete(id);
+		} catch (Exception e) {
+			return false;
+		}
 	}
 }

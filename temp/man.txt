@@ -1,0 +1,25 @@
+1. Build frontend:
+secure-notes/src/main/frontend/secure-notes % ng build
+
+2. Build backend:
+secure-notes % mvn package
+
+3. Build docker:
+secure-notes % docker build -t steullrich/securenotes .
+secure-notes % docker push steullrich/securenotes
+// test:
+// % docker run -p 80:8080 steullrich/securenotes
+// http://localhost/  
+
+4. Build kubernetes:
+% kubectl create deployment securenotes --image=steullrich/securenotes 
+% kubectl expose deployment securenotes --type=LoadBalancer --name=securenotes-balancer --port 8080 --target-port 8080
+
+5. Run
+a) start Docker Desktop
+b) % minikube start --container-runtime=docker
+c) % minikube dashboard   
+d) To connect from outside:
+   % kubectl port-forward svc/securenotes-balancer 8080:8080 (or minikube tunnel)
+e) http://localhost:8080/   
+   

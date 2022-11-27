@@ -1,0 +1,55 @@
+.choice-field {
+    width: 200px;
+    height: 25px;
+    vertical-align: top;
+}
+
+.title-field {
+    width: 80%;
+    height: 25px;
+    vertical-align: top;
+    margin-left: 5px;
+}
+
+.note-field {
+    width: 80%;
+    margin-top: 32px;
+    margin-left: 205px;
+}
+
+.area-size {
+    max-height: 300px;
+    min-height: 200px;
+}
+
+.button-height {
+    height: 36px;
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.get-button-space {
+    margin-left: 137px
+}
+
+.button-space {
+    margin-left: 204px
+}
+
+.min-space {
+    margin-left: 5px;
+}
+
+.width-db {
+    width: 95%;
+}
+
+.width-db-title {
+    width: 100px;
+    max-width: 100px;
+}
+
+.width-db-note {
+    width: 350px;
+    max-width: 350px;
+}
