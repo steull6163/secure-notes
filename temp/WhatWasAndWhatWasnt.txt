@@ -18,6 +18,7 @@ What wasn't:
 	creation of fkeys for the notes
 	creation of key pair/private key symmetric encryption/keys upload
 	clientside decryption with fkey and server-provided encrypted private key
+	github integration workflow to update docker hub
 	
 	
 	
