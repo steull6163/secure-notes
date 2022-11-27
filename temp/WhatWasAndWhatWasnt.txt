@@ -1,0 +1,30 @@
+What was:
+	Spring REST service
+	angular frontend
+	CRUD notes
+	clientside ent-/decryption of notes
+	display of decrypted and encrypted notes
+	java -jar securenotes.jar
+	steullrich/securenotes on docker
+	docker run steullrich/securenotes
+	http://localhost:8080/
+	https://github.com/steull6163/secure-notes
+	https://hub.docker.com/repository/docker/steullrich/securenotes
+	https://hub.docker.com/layers/steullrich/securenotes/latest/images/sha256-bba7098ac933d82567f971273e52f9ab16e9b2264cbb6e10596adc553fdca0ed?context=repo
+
+What wasn't:
+	registration/login
+	https communication with server
+	creation of fkeys for the notes
+	creation of key pair/private key symmetric encryption/keys upload
+	clientside decryption with fkey and server-provided encrypted private key
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
